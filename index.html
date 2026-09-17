@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="theme-color" content="#f7f5ee">
+	<title>PokéVault | Cartas que contam histórias</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+	<style>
+		:root {
+			--paper: #f7f5ee;
+			--ink: #191a18;
+			--muted: #73756d;
+			--line: #dddcd3;
+			--green: #174f3d;
+			--lime: #d7f24a;
+			--orange: #ef704b;
+			--blue: #d9ecf2;
+			--shadow: 0 22px 55px rgba(25, 26, 24, .1);
+		}
+
+		* { box-sizing: border-box; }
+		html { scroll-behavior: smooth; }
+		body { margin: 0; background: var(--paper); color: var(--ink); font-family: 'Space Grotesk', sans-serif; }
+		button, input { font: inherit; }
+		button { cursor: pointer; }
+		.mono { font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: .08em; font-size: 11px; }
+
+		.topbar { background: var(--green); color: #eef0df; display: flex; justify-content: center; padding: 10px 24px; font-size: 12px; }
+		.topbar strong { color: var(--lime); }
+		header { max-width: 1240px; margin: auto; padding: 23px 30px 18px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+		.brand { color: var(--ink); text-decoration: none; font-size: 22px; font-weight: 700; letter-spacing: -.06em; }
+		.brand span { color: var(--orange); }
+		nav { display: flex; gap: 28px; }
+		nav a { color: var(--muted); text-decoration: none; font-size: 14px; }
+		nav a:hover { color: var(--ink); }
+		.header-actions { display: flex; align-items: center; gap: 10px; }
+		.icon-btn, .cart-trigger { border: 1px solid var(--line); background: transparent; color: var(--ink); height: 42px; border-radius: 5px; display: inline-flex; align-items: center; justify-content: center; }
+		.icon-btn { width: 42px; }
+		.icon-btn:hover, .cart-trigger:hover { background: white; }
+		.cart-trigger { padding: 0 14px; gap: 9px; font-size: 13px; font-weight: 600; }
+		.cart-count { background: var(--orange); color: white; border-radius: 50%; min-width: 21px; height: 21px; display: grid; place-items: center; font-size: 11px; }
+
+		.hero { max-width: 1240px; margin: 24px auto 0; padding: 0 30px; }
+		.hero-card { background: var(--green); color: white; border-radius: 8px; min-height: 360px; overflow: hidden; position: relative; display: flex; align-items: center; }
+		.hero-card::after { content: ''; position: absolute; width: 410px; height: 410px; right: 7%; top: -92px; border: 1px solid rgba(215,242,74,.4); border-radius: 50%; box-shadow: 0 0 0 34px rgba(215,242,74,.06), 0 0 0 68px rgba(215,242,74,.04); }
+		.hero-copy { padding: 52px 8%; max-width: 700px; position: relative; z-index: 1; }
+		.eyebrow { color: var(--lime); margin: 0 0 19px; }
+		h1 { font-size: clamp(42px, 6vw, 78px); line-height: .97; letter-spacing: -.075em; max-width: 620px; margin: 0 0 23px; }
+		.hero-copy p { color: #cbd4c8; max-width: 430px; line-height: 1.55; margin: 0 0 28px; }
+		.primary-btn { border: 0; background: var(--lime); color: var(--ink); padding: 14px 20px; border-radius: 4px; font-weight: 700; font-size: 13px; }
+		.primary-btn:hover { background: white; }
+		.hero-stamp { position: absolute; right: 9%; bottom: 33px; z-index: 1; border: 1px solid rgba(255,255,255,.3); border-radius: 50%; width: 102px; height: 102px; display: grid; place-items: center; text-align: center; color: var(--lime); transform: rotate(10deg); }
+
+		.shop { max-width: 1240px; margin: 76px auto; padding: 0 30px; }
+		.section-heading { display: flex; justify-content: space-between; align-items: end; gap: 20px; margin-bottom: 23px; }
+		h2 { font-size: 31px; letter-spacing: -.06em; margin: 5px 0 0; }
+		.section-heading p { color: var(--muted); font-size: 13px; margin: 0; }
+		.toolbar { display: flex; gap: 10px; margin-bottom: 27px; border-bottom: 1px solid var(--line); padding-bottom: 18px; }
+		.search { position: relative; flex: 1; max-width: 345px; }
+		.search svg { position: absolute; left: 13px; top: 12px; color: var(--muted); }
+		.search input { width: 100%; height: 42px; border: 1px solid var(--line); background: white; border-radius: 4px; padding: 0 14px 0 41px; outline: none; font-size: 13px; }
+		.search input:focus { border-color: var(--green); }
+		.filter-btn { border: 1px solid var(--line); background: transparent; color: var(--muted); padding: 0 15px; border-radius: 4px; font-size: 12px; }
+		.filter-btn.active, .filter-btn:hover { background: var(--ink); border-color: var(--ink); color: white; }
+		.product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 23px; }
+		.product-card { min-width: 0; animation: rise .5s both; }
+		@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+		.card-visual { background: var(--blue); position: relative; aspect-ratio: 0.78; border-radius: 5px; display: grid; place-items: center; overflow: hidden; }
+		.card-visual img { width: 85%; height: 91%; object-fit: contain; filter: drop-shadow(0 15px 13px rgba(31,40,40,.22)); transition: transform .35s ease; }
+		.product-card:hover .card-visual img { transform: translateY(-7px) rotate(1.5deg); }
+		.tag { position: absolute; top: 10px; left: 10px; background: var(--lime); padding: 5px 8px; border-radius: 3px; font-size: 9px; font-weight: 700; z-index: 1; }
+		.favorite { position: absolute; top: 9px; right: 9px; width: 31px; height: 31px; border: 0; border-radius: 50%; color: var(--ink); background: rgba(255,255,255,.82); z-index: 1; font-size: 17px; line-height: 1; }
+		.favorite.active { background: var(--orange); color: white; }
+		.product-info { padding: 13px 2px 0; }
+		.product-meta { color: var(--muted); font-size: 10px; margin: 0 0 7px; }
+		.product-info h3 { font-size: 16px; margin: 0 0 12px; letter-spacing: -.035em; }
+		.product-bottom { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+		.price { font-weight: 700; font-size: 15px; }
+		.add-btn { border: 1px solid var(--green); background: transparent; color: var(--green); padding: 8px 10px; border-radius: 3px; font-size: 11px; font-weight: 700; }
+		.add-btn:hover { background: var(--green); color: white; }
+		.empty { grid-column: 1 / -1; text-align: center; color: var(--muted); padding: 60px; border: 1px dashed var(--line); }
+
+		.benefits { background: #e9e8df; padding: 25px 30px; display: flex; justify-content: center; gap: 10%; margin-top: 80px; }
+		.benefit { display: flex; align-items: center; gap: 12px; max-width: 210px; }
+		.benefit-icon { color: var(--orange); font-size: 20px; }
+		.benefit strong { display: block; font-size: 12px; margin-bottom: 3px; }
+		.benefit span { color: var(--muted); font-size: 11px; }
+		footer { max-width: 1240px; margin: auto; padding: 45px 30px; display: flex; justify-content: space-between; color: var(--muted); font-size: 12px; }
+
+		.overlay { position: fixed; inset: 0; background: rgba(25,26,24,.38); opacity: 0; pointer-events: none; transition: opacity .25s; z-index: 8; }
+		.overlay.open { opacity: 1; pointer-events: auto; }
+		.cart-panel { position: fixed; z-index: 9; right: 0; top: 0; height: 100vh; width: min(430px, 100%); background: var(--paper); transform: translateX(100%); transition: transform .3s ease; box-shadow: var(--shadow); padding: 28px; display: flex; flex-direction: column; }
+		.cart-panel.open { transform: translateX(0); }
+		.cart-head { display: flex; justify-content: space-between; align-items: center; padding-bottom: 21px; border-bottom: 1px solid var(--line); }
+		.cart-head h2 { font-size: 25px; }
+		.close-btn { border: 0; background: none; color: var(--muted); font-size: 25px; }
+		.cart-items { flex: 1; overflow: auto; padding: 20px 0; }
+		.cart-item { display: flex; gap: 12px; margin-bottom: 18px; align-items: center; }
+		.cart-item img { width: 54px; height: 73px; object-fit: contain; background: var(--blue); border-radius: 3px; }
+		.cart-item-info { flex: 1; }
+		.cart-item-info strong { display: block; font-size: 13px; margin-bottom: 5px; }
+		.cart-item-info span { color: var(--muted); font-size: 12px; }
+		.qty { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+		.qty button { width: 23px; height: 23px; border: 1px solid var(--line); background: white; border-radius: 3px; }
+		.remove { border: 0; background: none; color: var(--muted); font-size: 11px; }
+		.cart-empty { color: var(--muted); text-align: center; padding: 80px 20px; line-height: 1.5; }
+		.cart-footer { border-top: 1px solid var(--line); padding-top: 17px; }
+		.total-line { display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 17px; }
+		.checkout { width: 100%; background: var(--green); color: white; border: 0; padding: 15px; border-radius: 4px; font-weight: 700; }
+		.checkout:hover { background: var(--orange); }
+		.toast { position: fixed; bottom: 22px; left: 50%; transform: translate(-50%, 80px); background: var(--ink); color: white; padding: 13px 18px; border-radius: 4px; font-size: 12px; z-index: 20; opacity: 0; transition: all .3s; }
+		.toast.show { opacity: 1; transform: translate(-50%, 0); }
+		.detail-backdrop { position: fixed; inset: 0; z-index: 15; display: grid; place-items: center; padding: 20px; background: rgba(25,26,24,.62); opacity: 0; pointer-events: none; transition: opacity .25s; }
+		.detail-backdrop.open { opacity: 1; pointer-events: auto; }
+		.detail-modal { width: min(760px, 100%); max-height: calc(100vh - 40px); overflow: auto; background: var(--paper); border-radius: 7px; box-shadow: var(--shadow); display: grid; grid-template-columns: .9fr 1.1fr; position: relative; transform: translateY(15px) scale(.98); transition: transform .25s; }
+		.detail-backdrop.open .detail-modal { transform: none; }
+		.detail-art { min-height: 500px; display: grid; place-items: center; padding: 35px; }
+		.detail-art img { width: min(100%, 315px); max-height: 470px; object-fit: contain; filter: drop-shadow(0 22px 19px rgba(31,40,40,.28)); }
+		.detail-copy { padding: 54px 42px 42px; display: flex; flex-direction: column; justify-content: center; }
+		.detail-copy h2 { font-size: clamp(30px, 5vw, 48px); margin: 8px 0 14px; }
+		.detail-copy p { color: var(--muted); line-height: 1.6; font-size: 14px; }
+		.detail-price { font-size: 25px; font-weight: 700; margin: 26px 0 19px; }
+		.detail-actions { display: flex; gap: 9px; }
+		.detail-actions .primary-btn { flex: 1; }
+		.detail-favorite { width: 48px; border: 1px solid var(--line); background: white; border-radius: 4px; font-size: 20px; }
+		.detail-favorite.active { background: var(--orange); color: white; border-color: var(--orange); }
+		.detail-close { position: absolute; z-index: 1; top: 13px; right: 16px; border: 0; background: rgba(255,255,255,.8); color: var(--ink); width: 34px; height: 34px; border-radius: 50%; font-size: 21px; }
+		.zoom-hint { color: var(--muted); font-size: 10px; margin-top: 17px; }
+
+		@media (max-width: 800px) {
+			header { padding: 18px 20px; } nav { display: none; }
+			.hero, .shop { padding: 0 20px; } .hero { margin-top: 12px; } .hero-card { min-height: 410px; }
+			.hero-copy { padding: 45px 28px; } .hero-stamp { right: 24px; bottom: 22px; width: 76px; height: 76px; font-size: 9px; } .hero-card::after { right: -135px; top: 20px; }
+			.product-grid { grid-template-columns: repeat(2, 1fr); gap: 28px 15px; } .toolbar { overflow-x: auto; } .search { min-width: 230px; }
+			.benefits { flex-wrap: wrap; justify-content: flex-start; gap: 24px; padding: 25px 20px; } .benefit { width: 42%; }
+			footer { padding: 32px 20px; }
+			.detail-modal { grid-template-columns: 1fr; max-height: calc(100vh - 24px); } .detail-art { min-height: 300px; padding: 25px; } .detail-art img { height: 285px; } .detail-copy { padding: 28px 25px 30px; } .detail-copy h2 { font-size: 34px; } .zoom-hint { display: none; }
+		}
+	</style>
+</head>
+<body>
+	<div class="topbar"><span>Frete grátis em compras acima de R$ 250 <strong>• envio em até 24h</strong></span></div>
+	<header>
+		<a href="#inicio" class="brand">poké<span>vault</span></a>
+		<nav><a href="#colecao">Coleção</a><a href="#raridades">Raridades</a><a href="#sobre">Sobre nós</a></nav>
+		<div class="header-actions"><button class="icon-btn" aria-label="Buscar" onclick="document.getElementById('search').focus()">⌕</button><button class="cart-trigger" onclick="toggleCart()">Carrinho <span class="cart-count" id="cart-count">0</span></button></div>
+	</header>
+
+	<main id="inicio">
+		<section class="hero"><div class="hero-card"><div class="hero-copy"><p class="eyebrow mono">/ curadoria de colecionador</p><h1>Encontre a carta que faltava.</h1><p>Uma seleção feita para quem joga, coleciona e ainda sente aquele frio na barriga ao abrir um booster.</p><button class="primary-btn" onclick="document.getElementById('colecao').scrollIntoView()">Explorar coleção ↓</button></div><div class="hero-stamp mono">sua<br>próxima<br>raridade</div></div></section>
+		<section class="shop" id="colecao"><div class="section-heading"><div><p class="mono">/ catálogo 001</p><h2>Cartas em destaque</h2></div><p id="result-count">20 cartas encontradas</p></div><div class="toolbar"><div class="search"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="search" type="search" placeholder="Buscar por nome..." oninput="renderProducts()"></div><button class="filter-btn active" data-filter="Todas" onclick="setFilter(this)">Todas</button><button class="filter-btn" data-filter="Clássicas" onclick="setFilter(this)">Clássicas</button><button class="filter-btn" data-filter="Modernas" onclick="setFilter(this)">Modernas</button><button class="filter-btn" data-filter="Raras" onclick="setFilter(this)">Raras</button></div><div class="product-grid" id="product-grid"></div></section>
+		<section class="benefits" id="sobre"><div class="benefit"><span class="benefit-icon">✦</span><div><strong>Cartas verificadas</strong><span>Autenticidade em primeiro lugar</span></div></div><div class="benefit"><span class="benefit-icon">↗</span><div><strong>Envio cuidadoso</strong><span>Proteção para sua coleção</span></div></div><div class="benefit"><span class="benefit-icon">♡</span><div><strong>Feito para fãs</strong><span>Curadoria de quem entende</span></div></div></section>
+	</main>
+	<footer><span class="brand">poké<span>vault</span></span><span>© 2024 PokéVault · Colecione o extraordinário.</span></footer>
+
+	<div class="overlay" id="overlay" onclick="toggleCart()"></div><aside class="cart-panel" id="cart-panel"><div class="cart-head"><div><p class="mono">/ sua seleção</p><h2>Carrinho</h2></div><button class="close-btn" aria-label="Fechar carrinho" onclick="toggleCart()">×</button></div><div class="cart-items" id="cart-items"></div><div class="cart-footer"><div class="total-line"><span>Total</span><span id="cart-total">R$ 0,00</span></div><button class="checkout" onclick="checkout()">Finalizar compra →</button></div></aside><div class="toast" id="toast"></div>
+	<div class="detail-backdrop" id="detail-backdrop" onclick="closeDetail(event)"><section class="detail-modal" id="detail-modal" role="dialog" aria-modal="true" aria-labelledby="detail-title"><button class="detail-close" aria-label="Fechar detalhes" onclick="closeDetail()">×</button><div class="detail-art" id="detail-art"></div><div class="detail-copy" id="detail-copy"></div></section></div>
+
+	<script>
+		const products = [
+			{ id: 1, name: 'Pikachu VMAX', set: 'Coroa Estelar · 044/159', price: 189.9, category: 'Raras', image: 'https://images.pokemontcg.io/base1/58.png', tag: 'mais buscada', color: '#f7df88', description: 'Pikachu guarda energia nas bochechas e descarrega golpes elétricos com uma força surpreendente. É pequeno, leal e uma das presenças mais queridas de toda coleção.' },
+			{ id: 2, name: 'Charizard ex', set: 'Fogo Obsidiano · 125/197', price: 249.9, category: 'Modernas', image: 'https://images.pokemontcg.io/sv3/125.png', tag: 'nova chegada', color: '#f2c3a1', description: 'Charizard é um dragão feroz que voa em busca de adversários poderosos. A chama na ponta de sua cauda representa sua vitalidade e nunca se apaga enquanto ele estiver saudável.' },
+			{ id: 3, name: 'Mewtwo', set: 'Scarlet & Violet Black Star Promo · SVP 052', price: 169.9, category: 'Raras', image: 'https://images.pokemontcg.io/svp/52.png', tag: 'Holo Foil', color: '#d6c8e9', description: 'Criado por experimentos genéticos, Mewtwo possui habilidades psíquicas extraordinárias. Sua inteligência e poder fazem dele uma carta cobiçada por colecionadores e um rival difícil para qualquer treinador.' },
+			{ id: 4, name: 'Eevee', set: 'Evoluções · 101/108', price: 42.9, category: 'Clássicas', image: 'https://images.pokemontcg.io/base2/51.png', tag: 'queridinha', color: '#e9d2ad', description: 'Eevee tem um código genético instável, capaz de evoluir para diferentes formas conforme o ambiente e a pedra utilizada. Essa versatilidade é o que torna o Pokémon tão especial.' },
+			{ id: 5, name: 'Gengar VMAX', set: 'Golpe Fusão · 157/264', price: 329.9, category: 'Raras', image: 'https://images.pokemontcg.io/swsh8/157.png', tag: 'grail', color: '#b8b0d9', description: 'Gengar se esconde nas sombras e adora assustar quem passa por perto. Apesar do jeito travesso, sua presença fantasmagórica e seu sorriso marcante fazem desta uma das cartas mais desejadas.' },
+			{ id: 6, name: 'Bulbasaur', set: '151 · 001/165', price: 34.9, category: 'Clássicas', image: 'https://images.pokemontcg.io/base1/44.png', tag: '', color: '#bfdbbb', description: 'Bulbasaur nasce com uma semente nas costas, plantada no momento em que vem ao mundo. Ao absorver luz do sol, ele cresce forte e aprende a confiar em sua natureza tranquila.' },
+			{ id: 7, name: 'Miraidon ex', set: 'Escarlate e Violeta · 244/198', price: 289.9, category: 'Raras', image: 'https://images.pokemontcg.io/sv1/244.png', tag: 'arte rara', color: '#b7d6e7', description: 'Miraidon atravessa o céu e as estradas como um motor vivo. Vindo de um futuro distante, ele combina velocidade, tecnologia e eletricidade em uma presença imponente.' },
+			{ id: 8, name: 'Gardevoir ex', set: 'Escarlate e Violeta · 245/198', price: 379.9, category: 'Raras', image: 'https://images.pokemontcg.io/sv1/245.png', tag: 'arte rara', color: '#e2bdd4', description: 'Gardevoir usa seus poderes psíquicos para proteger seu treinador. Dizem que é capaz de criar pequenos buracos negros quando precisa defender alguém que ama.' },
+			{ id: 9, name: 'Shuckle', set: 'Lost Thunder · 16/214', price: 74.9, category: 'Raras', image: 'https://images.pokemontcg.io/sm8/16.png', tag: 'arte rara', color: '#d9dba9', description: 'Shuckle se abriga dentro de sua carapaça e transforma frutas armazenadas em um suco extremamente nutritivo. Sua aparência discreta esconde uma defesa surpreendentemente resistente.' },
+			{ id: 10, name: 'Aegislash', set: 'Paradox Rift · 210/182', price: 229.9, category: 'Raras', image: 'https://images.pokemontcg.io/sv4/210.png', tag: 'arte ilustrada', color: '#c8d7df', description: 'Aegislash é uma espada viva que reconhece qualidades de liderança. Diz a lenda que o treinador escolhido por ele está destinado a se tornar um grande rei.' },
+			{ id: 11, name: 'Hydreigon', set: 'Majestade dos Dragões · 33/70', price: 139.9, category: 'Raras', image: 'https://images.pokemontcg.io/sm75/33.png', tag: 'holo rara', color: '#c4b5cf', description: 'Hydreigon possui três cabeças e uma força destrutiva enorme. Sem cérebro próprio nas cabeças laterais, ele usa todas juntas para atacar e consumir tudo em seu caminho.' },
+			{ id: 12, name: 'Yveltal', set: 'Promo XY · XY06', price: 199.9, category: 'Raras', image: 'https://images.pokemontcg.io/xyp/XY06.png', tag: 'promo rara', color: '#d4c1cf', description: 'Yveltal é um Pokémon lendário associado ao fim da vida. Quando suas asas e penas brilham em vermelho, ele absorve a energia vital ao redor antes de retornar ao seu casulo.' },
+			{ id: 13, name: 'Leafeon ex', set: 'Evoluções Prismáticas · 144/131', price: 429.9, category: 'Raras', image: 'https://images.pokemontcg.io/sv8pt5/144.png', tag: 'arte especial', color: '#c5dfb6', description: 'Leafeon absorve energia da luz do sol e seu corpo exala um aroma fresco de folhas. É uma evolução serena, veloz e profundamente ligada à natureza.' },
+			{ id: 14, name: 'Flareon ex', set: 'Evoluções Prismáticas · 146/131', price: 399.9, category: 'Raras', image: 'https://images.pokemontcg.io/sv8pt5/146.png', tag: 'arte especial', color: '#f1c09e', description: 'Flareon guarda ar dentro de uma bolsa de fogo e o aquece antes de lançar chamas intensas. Seu temperamento caloroso combina com a energia de um verdadeiro Pokémon de fogo.' },
+			{ id: 15, name: 'Jolteon ex', set: 'Evoluções Prismáticas · 153/131', price: 449.9, category: 'Raras', image: 'https://images.pokemontcg.io/sv8pt5/153.png', tag: 'arte especial', color: '#f5e39e', description: 'Jolteon transforma eletricidade em agulhas de pelo que dispara em alta velocidade. É uma Eeveelution elétrica, ágil e sempre pronta para entrar em ação.' },
+			{ id: 16, name: 'Glaceon ex', set: 'Evoluções Prismáticas · 150/131', price: 419.9, category: 'Raras', image: 'https://images.pokemontcg.io/sv8pt5/150.png', tag: 'arte especial', color: '#b9dce3', description: 'Glaceon controla a temperatura do próprio corpo e cria cristais de gelo no ar. Sua elegância esconde uma capacidade de congelar tudo ao redor em segundos.' },
+			{ id: 17, name: 'Vaporeon ex', set: 'Evoluções Prismáticas · 149/131', price: 439.9, category: 'Raras', image: 'https://images.pokemontcg.io/sv8pt5/149.png', tag: 'arte especial', color: '#b2d7e7', description: 'Vaporeon possui células parecidas com as da água e consegue se dissolver completamente em rios e lagos. É uma evolução aquática graciosa e muito difícil de localizar.' },
+			{ id: 18, name: 'Espeon ex', set: 'Evoluções Prismáticas · 155/131', price: 469.9, category: 'Raras', image: 'https://images.pokemontcg.io/sv8pt5/155.png', tag: 'arte especial', color: '#e5c1d1', description: 'Espeon usa o pelo sensível de sua cauda para prever os movimentos dos adversários. Quando confia em seu treinador, seus poderes psíquicos se tornam ainda mais precisos.' },
+			{ id: 19, name: 'Sylveon ex', set: 'Evoluções Prismáticas · 156/131', price: 489.9, category: 'Raras', image: 'https://images.pokemontcg.io/sv8pt5/156.png', tag: 'arte especial', color: '#f0c2c9', description: 'Sylveon emite uma aura tranquilizadora por meio de suas fitas. Apesar de sua aparência delicada, ele enfrenta qualquer ameaça para proteger quem ama.' },
+			{ id: 20, name: 'Umbreon ex', set: 'Evoluções Prismáticas · 161/131', price: 599.9, category: 'Raras', image: 'https://images.pokemontcg.io/sv8pt5/161.png', tag: 'arte especial', color: '#b9b1c4', description: 'Umbreon evolui sob a luz da lua e seus anéis brilham no escuro. Silencioso e misterioso, ele espera o momento certo para atacar com precisão.' }
+		];
+		let filter = 'Todas';
+		let cart = JSON.parse(localStorage.getItem('pokevault-cart') || '[]');
+		let favorites = JSON.parse(localStorage.getItem('pokevault-favorites') || '[]');
+		const money = value => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+		function setFilter(button) { filter = button.dataset.filter; document.querySelectorAll('.filter-btn').forEach(item => item.classList.toggle('active', item === button)); renderProducts(); }
+		function renderProducts() {
+			const term = document.getElementById('search').value.toLowerCase();
+			const visible = products.filter(item => (filter === 'Todas' || item.category === filter) && item.name.toLowerCase().includes(term));
+			document.getElementById('result-count').textContent = `${visible.length} carta${visible.length === 1 ? '' : 's'} encontrada${visible.length === 1 ? '' : 's'}`;
+			document.getElementById('product-grid').innerHTML = visible.length ? visible.map((item, index) => `<article class="product-card" style="animation-delay:${index * 45}ms"><div class="card-visual" style="background:${item.color}" onclick="openDetail(${item.id})" role="button" tabindex="0" onkeydown="if(event.key === 'Enter') openDetail(${item.id})">${item.tag ? `<span class="tag mono">${item.tag}</span>` : ''}<button class="favorite ${favorites.includes(item.id) ? 'active' : ''}" aria-label="Favoritar ${item.name}" onclick="event.stopPropagation(); toggleFavorite(${item.id})">${favorites.includes(item.id) ? '♥' : '♡'}</button><img src="${item.image}" alt="Carta ${item.name}" loading="lazy"></div><div class="product-info"><p class="product-meta mono">${item.set}</p><h3 onclick="openDetail(${item.id})">${item.name}</h3><div class="product-bottom"><span class="price">${money(item.price)}</span><button class="add-btn" onclick="addToCart(${item.id})">+ adicionar</button></div></div></article>`).join('') : '<div class="empty">Nenhuma carta encontrada.<br>Tente outro nome ou categoria.</div>';
+		}
+		function toggleFavorite(id) { favorites = favorites.includes(id) ? favorites.filter(item => item !== id) : [...favorites, id]; localStorage.setItem('pokevault-favorites', JSON.stringify(favorites)); renderProducts(); }
+		function openDetail(id) { const item = products.find(product => product.id === id); const liked = favorites.includes(id); document.getElementById('detail-art').style.background = item.color; document.getElementById('detail-art').innerHTML = `<img src="${item.image}" alt="Carta ${item.name} ampliada">`; document.getElementById('detail-copy').innerHTML = `<p class="mono">${item.category} · edição selecionada</p><h2 id="detail-title">${item.name}</h2><p>${item.description}</p><p class="detail-copy-set mono">${item.set}</p><p class="detail-price">${money(item.price)}</p><div class="detail-actions"><button class="primary-btn" onclick="addToCart(${item.id}); closeDetail()">Adicionar ao carrinho →</button><button class="detail-favorite ${liked ? 'active' : ''}" aria-label="Favoritar ${item.name}" onclick="toggleFavorite(${item.id}); openDetail(${item.id})">${liked ? '♥' : '♡'}</button></div><p class="zoom-hint mono">Clique fora ou pressione Esc para fechar</p>`; document.getElementById('detail-backdrop').classList.add('open'); document.body.style.overflow = 'hidden'; }
+		function closeDetail(event) { if (event && event.target !== event.currentTarget) return; document.getElementById('detail-backdrop').classList.remove('open'); document.body.style.overflow = ''; }
+		function addToCart(id) { const item = cart.find(product => product.id === id); item ? item.qty++ : cart.push({ id, qty: 1 }); saveCart(); const product = products.find(product => product.id === id); showToast(`${product.name} adicionado ao carrinho`); }
+		function changeQty(id, amount) { const item = cart.find(product => product.id === id); item.qty += amount; if (item.qty < 1) cart = cart.filter(product => product.id !== id); saveCart(); }
+		function removeFromCart(id) { cart = cart.filter(product => product.id !== id); saveCart(); }
+		function saveCart() { localStorage.setItem('pokevault-cart', JSON.stringify(cart)); renderCart(); }
+		function renderCart() { const count = cart.reduce((sum, item) => sum + item.qty, 0); document.getElementById('cart-count').textContent = count; const total = cart.reduce((sum, item) => sum + products.find(product => product.id === item.id).price * item.qty, 0); document.getElementById('cart-total').textContent = money(total); document.getElementById('cart-items').innerHTML = cart.length ? cart.map(item => { const product = products.find(product => product.id === item.id); return `<div class="cart-item"><img src="${product.image}" alt="${product.name}"><div class="cart-item-info"><strong>${product.name}</strong><span>${money(product.price)}</span><div class="qty"><button onclick="changeQty(${item.id}, -1)">−</button><span>${item.qty}</span><button onclick="changeQty(${item.id}, 1)">+</button><button class="remove" onclick="removeFromCart(${item.id})">remover</button></div></div></div>`; }).join('') : '<div class="cart-empty">Seu carrinho está esperando<br>uma carta especial.</div>'; }
+		function toggleCart() { document.getElementById('cart-panel').classList.toggle('open'); document.getElementById('overlay').classList.toggle('open'); }
+		function showToast(message) { const toast = document.getElementById('toast'); toast.textContent = message; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 2300); }
+		function checkout() { if (!cart.length) return showToast('Adicione uma carta primeiro'); showToast('Pedido preparado. Obrigado!'); }
+		document.addEventListener('keydown', event => { if (event.key === 'Escape') closeDetail(); });
+		renderProducts(); renderCart();
+	</script>
+</body>
+</html>
